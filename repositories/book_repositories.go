@@ -4,6 +4,8 @@ import (
 
 	"github.com/shanomz7235/bookstore-back/config"
 	"github.com/shanomz7235/bookstore-back/models"
+	"errors"
+
 )
 
 func CreateBook(book *models.Book) error {
@@ -34,18 +36,24 @@ func GetBook(id uint) ( *models.Book, error) {
 
 }
 
-func UpdateBook( book *models.Book) error {
-	result := config.DB.Model(&book).Updates(book)
+func UpdateBook(book *models.Book, newBook *models.BookUpdate) error {
+
+
+	result := config.DB.Model(&book).Updates(newBook)
 	if result.Error != nil {
         return result.Error
     }
+	if result.RowsAffected == 0 {
+		return errors.New("no rows affected")
+	}
+
     return  nil
 }
 
-func DeleteBook(id uint) error {
-	var book models.Book
-	result := config.DB.Delete(&book,id)
-	if result != nil{
+func DeleteBook(id uint, book *models.Book) error {
+	
+	result := config.DB.Where("id = ?", id).Delete(&book)
+	if result.Error != nil{
 		return result.Error
 	}
 	return nil

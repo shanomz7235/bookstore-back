@@ -21,9 +21,10 @@ func CreateBook(c *fiber.Ctx) error {
 		})
 	}
 	if err := services.CreateBook(book); err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"Error": err.Error(),
+		})
 	}
-	
 
 	return c.JSON(fiber.Map{
 		"Message": "Create Book Complete!",
@@ -49,7 +50,7 @@ func GetBook(c *fiber.Ctx) error {
 	}
 	book, err := services.GetBook(uint(id))
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"Error": "Book not found",
 		})
 	}
@@ -64,19 +65,20 @@ func UpdateBook(c *fiber.Ctx) error {
 		})
 	}
 
-	book := new(models.Book)
+	newBook := new(models.BookUpdate)
 
-	if err := c.BodyParser(book); err != nil {
+	if err := c.BodyParser(newBook); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"Error": "Invalid Book Information",
 		})
 	}
-	book.ID = uint(id)
-	if err = services.UpdateBook(book); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"Error": "Book not found",
+
+	if err = services.UpdateBook(uint(id), newBook); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"Error": err.Error(),
 		})
 	}
+
 	return c.JSON(fiber.Map{
 		"Message": "Update Successful",
 	})
@@ -91,8 +93,8 @@ func DeleteBook(c *fiber.Ctx) error {
 		})
 	}
 	err = services.DeleteBook(uint(id))
-	if err != nil{
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"Error": "Book not found",
 		})
 	}

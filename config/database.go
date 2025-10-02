@@ -33,7 +33,7 @@ func ConnectDB() {
     log.New(os.Stdout, "\r\n", log.LstdFlags),
     logger.Config{
         SlowThreshold:              time.Second,
-        LogLevel:                   logger.Warn,
+        LogLevel:                   logger.Info,
         Colorful:                   true, 
     },
 )
