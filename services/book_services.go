@@ -15,11 +15,11 @@ func CreateBook(book *models.Book) error {
 	return repositories.CreateBook(book)
 }
 
-func GetBooks() ( []models.Book, error) {
+func GetBooks() ( []models.BookResponse, error) {
 	return repositories.GetBooks()
 }
 
-func GetBook(id uint) (*models.Book, error) {
+func GetBook(id uint) (*models.BookResponse, error) {
 	book, err := repositories.GetBook(id)
     if err != nil {
         return nil, err
@@ -28,7 +28,7 @@ func GetBook(id uint) (*models.Book, error) {
 }
 
 func UpdateBook(id uint, newBook *models.BookUpdate) error {
-	book, err := repositories.GetBook(id)
+	book, err := repositories.GetBookEntityByID(id)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func UpdateBook(id uint, newBook *models.BookUpdate) error {
 }
 
 func DeleteBook(id uint) error {
-	book, err := repositories.GetBook(id)
+	book, err := repositories.GetBookEntityByID(id)
 	if err != nil {
 		return err
 	}

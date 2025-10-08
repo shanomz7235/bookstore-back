@@ -35,7 +35,7 @@ func GetBooks(c *fiber.Ctx) error {
 	books, err := services.GetBooks()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"Error": "Cannot fetch book",
+			"Error": err,
 		})
 	}
 	return c.JSON(books)
@@ -51,7 +51,7 @@ func GetBook(c *fiber.Ctx) error {
 	book, err := services.GetBook(uint(id))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"Error": "Book not found",
+			"Error": err.Error(),
 		})
 	}
 	return c.JSON(book)
@@ -95,7 +95,7 @@ func DeleteBook(c *fiber.Ctx) error {
 	err = services.DeleteBook(uint(id))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"Error": "Book not found",
+			"Error": err.Error(),
 		})
 	}
 	return c.JSON(fiber.Map{

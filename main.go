@@ -15,6 +15,7 @@ func main() {
 	app := fiber.New()
 
 	routes.SetupBookRoutes(app) 
+	routes.SetupUserRoutes(app)
 
 
 	log.Println("Server running on :8080")

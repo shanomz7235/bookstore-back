@@ -16,9 +16,11 @@ func CreateBook(book *models.Book) error {
     return  nil
 }
 
-func GetBooks() ( []models.Book, error) {
-	var books []models.Book
-	result := config.DB.Order("id").Find(&books)
+func GetBooks() ( []models.BookResponse, error) {
+	var books []models.BookResponse
+	result := config.DB.Model(&models.Book{}).
+		Order("id").
+		Find(&books)
 	if result.Error != nil{
 		return nil, result.Error
 	}
@@ -26,15 +28,29 @@ func GetBooks() ( []models.Book, error) {
 	return books, nil
 }
 
-func GetBook(id uint) ( *models.Book, error) {
-	var book models.Book
-	result := config.DB.First(&book, id)
-	if result.Error != nil {
+func GetBook(id uint) (*models.BookResponse, error) {
+    var book models.BookResponse
+    result := config.DB.Model(&models.Book{}).
+        Select("id", "title", "author", "price", "stock").
+        Where("id = ?", id).
+        First(&book)
+
+    if result.Error != nil {
         return nil, result.Error
     }
     return &book, nil
-
 }
+
+
+func GetBookEntityByID(id uint) (*models.Book, error) {
+    var book models.Book
+    result := config.DB.First(&book, id)
+    if result.Error != nil {
+        return nil, result.Error
+    }
+    return &book, nil
+}
+
 
 func UpdateBook(book *models.Book, newBook *models.BookUpdate) error {
 

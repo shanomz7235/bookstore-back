@@ -17,3 +17,11 @@ type BookUpdate struct {
 	Price  *float64 `json:"price"`
 	Stock  *uint    `json:"stock"`
 }
+
+type BookResponse struct {
+	ID     uint    `json:"id"`
+	Title  string  `json:"title"`
+	Author string  `json:"author"`
+	Price  float64 `json:"price"`
+	Stock  uint    `json:"stock"`
+}
