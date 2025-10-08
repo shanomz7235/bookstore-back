@@ -34,7 +34,7 @@ func GetUsers() ([] models.User, error) {
 func GetUserByEmail(email string) (*models.LoginUser, error) {
 	var user models.LoginUser
 	result := config.DB.Model(&models.User{}).
-		Select("email", "password").
+		Select("email", "password", "role").
 		Where("email = ?", email).
 		First(&user)
     

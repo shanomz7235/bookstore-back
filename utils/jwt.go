@@ -1,18 +1,22 @@
 package utils
 
 import (
+	"github.com/golang-jwt/jwt/v5"
 	"os"
 	"time"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 var jwtSecretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 
-func GenerateJWT(email string) (string, error) {
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-	claims["user_email"] = email
-	claims["exp"] = time.Now().Add(72 * time.Hour).Unix()
+func GenerateJWT(email string, role string) (string, error) {
+	
+	claims := jwt.MapClaims{
+		"user_email": email,
+		"user_role":  role,
+		"exp":        time.Now().Add(72 * time.Hour).Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	t, err := token.SignedString(jwtSecretKey)
 	if err != nil {
@@ -21,8 +25,8 @@ func GenerateJWT(email string) (string, error) {
 	return t, nil
 }
 
-func ValidateJWT(tokenString string) (*jwt.Token, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+func ValidateJWT(cookie string) (*jwt.Token, error) {
+	token, err := jwt.ParseWithClaims(cookie, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecretKey, nil
 	})
 	return token, err

@@ -8,9 +8,6 @@ import (
 	"github.com/shanomz7235/bookstore-back/services"
 )
 
-func Welcome(c *fiber.Ctx) error {
-	return c.SendString("Welcome to the Bookstore API!")
-}
 
 func CreateBook(c *fiber.Ctx) error {
 	book := new(models.Book)

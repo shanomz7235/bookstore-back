@@ -2,7 +2,6 @@ package models
 
 import "gorm.io/gorm"
 
-
 type User struct {
 	gorm.Model
 	Email    string `gorm:"unique;not null" json:"email"`
@@ -13,5 +12,6 @@ type User struct {
 
 type LoginUser struct {
 	Email    string `json:"email"`
-    Password string `json:"password"`
+	Password string `json:"password"`
+	Role     string `json:"role"`
 }
