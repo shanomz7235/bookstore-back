@@ -3,18 +3,19 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/shanomz7235/bookstore-back/handlers"
+	"github.com/shanomz7235/bookstore-back/middleware"
 )
 
 func SetupUserRoutes(app *fiber.App) {
 
-
 	user := app.Group("/user")
+
+	user.Use(middleware.AuthRequired)
 	user.Post("/register", handlers.Register)
-	user.Get("/:id", handlers.GetUser)
-	user.Get("/", handlers.GetUsers)
 	user.Post("/login", handlers.LoginUser)
-	// book.Get("/:id", handlers.GetUser)
-	// book.Get("/:id", handlers.GetBook)
-	// book.Put("/:id", handlers.UpdateBook)
-	// book.Delete("/:id", handlers.DeleteBook)
+
+	admin := user.Group("/", middleware.RoleRequired("admin"))
+	admin.Get("/:id", handlers.GetUser)
+	admin.Get("/", handlers.GetUsers)
+
 }
