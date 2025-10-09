@@ -8,8 +8,8 @@ import (
 
 )
 
-func CreateBook(book *models.Book) error {
-	result := config.DB.Create(book)
+func CreateBook(book []models.Book) error {
+	result := config.DB.Create(&book)
 	if result.Error != nil {
         return result.Error
     }

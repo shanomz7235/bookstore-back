@@ -10,21 +10,22 @@ import (
 
 
 func CreateBook(c *fiber.Ctx) error {
-	book := new(models.Book)
+	book := []models.Book{}
 
-	if err := c.BodyParser(book); err != nil {
+	if err := c.BodyParser(&book); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"Error": "Invalid Book Information",
 		})
 	}
 	if err := services.CreateBook(book); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"Error": err.Error(),
 		})
 	}
 
 	return c.JSON(fiber.Map{
 		"Message": "Create Book Complete!",
+		"Count": len(book),
 	})
 }
 

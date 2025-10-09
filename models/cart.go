@@ -1,12 +1,13 @@
 package models
 
 type CartItem struct {
-    BookID   uint
-    Quantity uint
-    Price    uint
+	BookID   uint    `json:"bookid"`
+	Quantity uint    `json:"quantity"`
+	Price    float64 `json:"price"`
 }
 
 type Cart struct {
-    UserID uint
-    Items  []CartItem
+	ID uint
+	UserID uint
+	Items  []CartItem
 }

@@ -1,18 +1,21 @@
 package utils
 
 import (
-	"github.com/golang-jwt/jwt/v5"
 	"os"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/shanomz7235/bookstore-back/models"
 )
 
 var jwtSecretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 
-func GenerateJWT(email string, role string) (string, error) {
-	
+func GenerateJWT(user *models.LoginUser) (string, error) {
+
 	claims := jwt.MapClaims{
-		"user_email": email,
-		"user_role":  role,
+		"user_email": user.Email,
+		"user_role":  user.Role,
+		"user_id":    user.ID,
 		"exp":        time.Now().Add(72 * time.Hour).Unix(),
 	}
 

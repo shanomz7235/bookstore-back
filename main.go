@@ -16,6 +16,7 @@ func main() {
 
 	routes.SetupBookRoutes(app) 
 	routes.SetupUserRoutes(app)
+	routes.SetupCartRoutes(app)
 
 
 	log.Println("Server running on :8080")

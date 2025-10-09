@@ -47,6 +47,6 @@ func LoginUser(user *models.LoginUser) (string, error) {
 		return "", err
 	}
 
-	return utils.GenerateJWT(userDB.Email, userDB.Role)
+	return utils.GenerateJWT(userDB)
 
 }

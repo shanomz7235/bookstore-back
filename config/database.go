@@ -51,6 +51,7 @@ func ConnectDB() {
 
 	log.Println("DB connected")
 
-	db.AutoMigrate(&models.Book{}, &models.User{})
+	db.AutoMigrate(&models.Book{}, &models.User{}, &models.CartItem{}, &models.Cart{})
+	// db.AutoMigrate(&models.Carts{})
 	DB = db
 }

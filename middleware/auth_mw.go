@@ -29,11 +29,10 @@ func AuthRequired(c *fiber.Ctx) error {
 		})
 	}
 
-
 	c.Locals("user_email", claims["user_email"])
 	c.Locals("role", claims["user_role"])
+	c.Locals("user_id", claims["user_id"])
 	c.Locals("claims", claims)
-
 
 	return c.Next()
 }
