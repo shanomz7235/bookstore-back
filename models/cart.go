@@ -1,13 +1,18 @@
 package models
 
-type CartItem struct {
-	BookID   uint    `json:"bookid"`
-	Quantity uint    `json:"quantity"`
-	Price    float64 `json:"price"`
+import "gorm.io/gorm"
+
+type Carts struct {
+    gorm.Model
+    UserID uint       `json:"user_id"`
+    Cart_ID uint
+    Items  []Items `gorm:"foreignKey:CartID" json:"items"` 
 }
 
-type Cart struct {
-	ID uint
-	UserID uint
-	Items  []CartItem
+type Items struct {
+    gorm.Model
+    CartID   uint   `json:"cart_id"` 
+    BookID   uint    `json:"book_id"`
+    Quantity uint    `json:"quantity"`
+    Price    float64 `json:"price"`
 }

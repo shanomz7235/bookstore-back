@@ -9,7 +9,7 @@ import (
 )
 
 func AddToCart(c *fiber.Ctx) error {
-	cartItem := []models.CartItem{}
+	cartItem := []models.Items{}
 
 	
 

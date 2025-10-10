@@ -8,7 +8,7 @@ import (
 	// "errors"
 )
 
-func AddToCart(cart []models.CartItem) error {
+func AddToCart(cart []models.Items) error {
 	result := config.DB.Create(&cart)
 	if result.Error != nil{
 		return result.Error
@@ -16,8 +16,8 @@ func AddToCart(cart []models.CartItem) error {
 	return nil
 }
 
-func GetCartItems() ([]models.CartItem, error) {
-	var cart []models.CartItem
+func GetCartItems() ([]models.Items, error) {
+	var cart []models.Items
 	result := config.DB.Find(&cart)
 	if result.Error != nil{
 		return nil, result.Error
@@ -25,29 +25,18 @@ func GetCartItems() ([]models.CartItem, error) {
 	return  cart, nil
 }
 
-// func SaveCart(cartItems []models.CartItem, userID uint) error {
-// 	tx := config.DB.Begin()
-
-// 	cart := models.Carts{
-// 		UserID: userID,
-// 	}
-	
-
-// 	if err := tx.Create(&cart).Error; err != nil{
-// 		tx.Rollback()
-// 		return fmt.Errorf("failed to create cart: %w", err)
-// 	}
-// 	print("create cart")
-
-// 	for i := range cartItems{
-// 		cartItems[i].CartID = cart.ID
-// 	}
-
-// 	if err := tx.Create(&cartItems).Error; err != nil{
-// 		tx.Rollback()
-// 		return fmt.Errorf("failed to create cart items: %w", err)
-// 	}
-
-
-// 	return tx.Commit().Error
-// }
+func SaveCart(cartItems []models.Items, userID uint, ) (error) {
+    // สร้าง Cart ใหม่
+    cart := models.Carts{
+        UserID: userID,
+        Items:  cartItems,
+    }
+    
+    // บันทึกลง DB (จะบันทึกทั้ง Cart และ CartItem ที่เชื่อมด้วย)
+    result := config.DB.Create(&cart)
+    if result.Error != nil {
+        return result.Error
+    }
+    
+    return nil
+}

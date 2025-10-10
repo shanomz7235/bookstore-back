@@ -10,10 +10,12 @@ import (
 	"github.com/shanomz7235/bookstore-back/repositories"
 )
 
-func AddToCart(cart []models.CartItem) error {
+func AddToCart(cart []models.Items) error {
 
 	for i := range cart {
 		if cart[i].Quantity < 1 || cart[i].BookID < 1{
+			println(cart[i].Quantity)
+			println(cart[i].BookID)
 			return fmt.Errorf("validation failed for cart Item %d: missing required fields", i)
 		}
 		book, err := repositories.GetBook(cart[i].BookID)
@@ -31,15 +33,15 @@ func AddToCart(cart []models.CartItem) error {
 	return repositories.AddToCart(cart)
 }
 
-func GetCartItems() ([]models.CartItem, error) {
+func GetCartItems() ([]models.Items, error) {
 	return repositories.GetCartItems()
 }
 
 func SaveCart(userID uint) error {
-	// cartItems, err := GetCartItems()
-	// if err != nil{
-	// 	return err
-	// }
+	cartItems, err := GetCartItems()
+	if err != nil{
+		return err
+	}
 
-	return nil
+	return repositories.SaveCart(cartItems, userID)
 }
