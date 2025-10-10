@@ -16,7 +16,7 @@ func AddToCart(cart []models.Items) error {
 	return nil
 }
 
-func GetCartItems() ([]models.Items, error) {
+func GetItems() ([]models.Items, error) {
 	var cart []models.Items
 	result := config.DB.Find(&cart)
 	if result.Error != nil{
@@ -39,4 +39,21 @@ func SaveCart(cartItems []models.Items, userID uint, ) (error) {
     }
     
     return nil
+}
+
+func GetCart(id uint) *models.Carts {
+	var cart models.Carts
+	result := config.DB.
+		Where("user_id = ? AND status = ?", id, "active").
+		First(&cart)
+
+	if result.Error != nil {
+		return nil
+	}
+	// print("already have cart")
+	return &cart
+}
+
+func CreateCart(cart *models.Carts) error {
+	return config.DB.Create(cart).Error
 }

@@ -15,7 +15,6 @@ import (
 
 var DB *gorm.DB
 
-
 func ConnectDB() {
 	err := godotenv.Load()
 	if err != nil {
@@ -30,27 +29,29 @@ func ConnectDB() {
 	log.Println("Load data from .env Success")
 
 	newLogger := logger.New(
-    log.New(os.Stdout, "\r\n", log.LstdFlags),
-    logger.Config{
-        SlowThreshold:              time.Second,
-        LogLevel:                   logger.Info,
-        Colorful:                   true, 
-    },
-)
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold: time.Second,
+			// LogLevel:      logger.Info,
+			Colorful:      true,
+		},
+	)
 
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger : newLogger,
+		Logger: newLogger,
 	})
 
-	
 	if err != nil {
 		log.Fatal(err)
 		panic(err)
 	}
 
 	log.Println("DB connected")
-	db.AutoMigrate(&models.Book{}, &models.User{}, &models.Items{})
-	
+	err = db.AutoMigrate(&models.Book{}, &models.User{}, &models.Carts{}, &models.Items{} )
+	if err != nil {
+		log.Fatalf("AutoMigrate failed: %v", err)
+	}
+
 	DB = db
 }

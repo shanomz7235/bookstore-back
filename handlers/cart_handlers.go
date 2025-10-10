@@ -9,23 +9,33 @@ import (
 )
 
 func AddToCart(c *fiber.Ctx) error {
-	cartItem := []models.Items{}
+	items := []models.Items{}
 
-	
-
-	if err := c.BodyParser(&cartItem); err != nil{
+	if err := c.BodyParser(&items); err != nil{
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"Error": "Invalid Item Information",
 		})
 	}
-	if err := services.AddToCart(cartItem); err != nil{
+	userIDStr, ok := c.Locals("user_id").(string)
+    if !ok {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "error": "Invalid user ID type",
+        })
+    }
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil{
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "error": err,
+        })
+	}
+	if err := services.AddToCart(items, uint(userID)); err != nil{
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"Error": err.Error(),
 		})
 	}
 	return c.JSON(fiber.Map{
 		"Message":"Add to cart successful",
-		"Count": len(cartItem),
+		"Count": len(items),
 	})
 }
 
