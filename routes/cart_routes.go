@@ -14,6 +14,5 @@ func SetupCartRoutes(app *fiber.App) {
 
 	cart.Post("/", handlers.AddToCart)
 	cart.Get("/", handlers.GetCartItems)
-	cart.Post("/save", handlers.SaveCart)
 
 }

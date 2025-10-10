@@ -16,29 +16,15 @@ func AddToCart(cart []models.Items) error {
 	return nil
 }
 
-func GetItems() ([]models.Items, error) {
-	var cart []models.Items
-	result := config.DB.Find(&cart)
+func GetCartItems(id uint) (*models.Carts, error) {
+	var cart models.Carts
+	result := config.DB.Preload("Items").
+		Where("user_id  = ? AND status = ?", id, "active").
+		First(&cart)
 	if result.Error != nil{
 		return nil, result.Error
 	}
-	return  cart, nil
-}
-
-func SaveCart(cartItems []models.Items, userID uint, ) (error) {
-    // สร้าง Cart ใหม่
-    cart := models.Carts{
-        UserID: userID,
-        Items:  cartItems,
-    }
-    
-    // บันทึกลง DB (จะบันทึกทั้ง Cart และ CartItem ที่เชื่อมด้วย)
-    result := config.DB.Create(&cart)
-    if result.Error != nil {
-        return result.Error
-    }
-    
-    return nil
+	return  &cart, nil
 }
 
 func GetCart(id uint) *models.Carts {

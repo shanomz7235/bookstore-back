@@ -36,21 +36,37 @@ func AddToCart(items []models.Items, id uint) error {
 			return errors.New("the stock is less than the required amount")
 		}
 		items[i].Price = book.Price
-		items[i].Cart_ID = cart.ID
+		items[i].CartID = cart.ID
 
 	}
 	return repositories.AddToCart(items)
 }
 
-func GetCartItems() ([]models.Items, error) {
-	return repositories.GetItems()
-}
+func GetCartItems(id uint) (*models.CartResponse, error) {
 
-func SaveCart(userID uint) error {
-	cartItems, err := GetCartItems()
-	if err != nil {
-		return err
+	cart, err := repositories.GetCartItems(id)
+	if err != nil{
+		return nil, err
 	}
 
-	return repositories.SaveCart(cartItems, userID)
+	var items []models.ItemResponse
+	for _, item := range cart.Items{
+		items = append(items, models.ItemResponse{
+			ID: item.ID,
+			CartID: item.CartID,
+			BookID: item.BookID,
+			Quantity: item.Quantity,
+			Price: item.Price,
+		})
+	}
+
+	cartRes := &models.CartResponse{
+		ID: cart.ID,
+		UserID: cart.UserID,
+		Status: cart.Status,
+		Items: items,
+	}
+	return cartRes, nil
 }
+
+

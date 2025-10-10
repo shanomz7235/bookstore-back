@@ -5,13 +5,28 @@ import "gorm.io/gorm"
 type Carts struct {
 	gorm.Model
 	UserID uint    `json:"user_id"`
-	Items  []Items `gorm:"foreignKey:Cart_ID" json:"items"`
+	Items  []Items `gorm:"foreignKey:CartID" json:"items"`
 	Status string  `json:"status"`
 }
 
 type Items struct {
 	gorm.Model
-	Cart_ID  uint    `json:"cart_id"`
+	CartID  uint    `json:"cart_id"`
+	BookID   uint    `json:"bookid"`
+	Quantity uint    `json:"quantity"`
+	Price    float64 `json:"price"`
+}
+
+type CartResponse struct {
+	ID     uint              `json:"id"`
+	UserID uint              `json:"user_id"`
+	Status string            `json:"status"`
+	Items  []ItemResponse `json:"items"`
+}
+
+type ItemResponse struct {
+	ID       uint    `json:"id"`
+	CartID   uint    `json:"cart_id"`
 	BookID   uint    `json:"bookid"`
 	Quantity uint    `json:"quantity"`
 	Price    float64 `json:"price"`
