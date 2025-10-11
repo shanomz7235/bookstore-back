@@ -3,9 +3,11 @@ package repositories
 import (
 	// "fmt"
 
+	"errors"
+
 	"github.com/shanomz7235/bookstore-back/config"
 	"github.com/shanomz7235/bookstore-back/models"
-	// "errors"
+	"gorm.io/gorm"
 )
 
 func AddToCart(cart []models.Items) error {
@@ -18,7 +20,10 @@ func AddToCart(cart []models.Items) error {
 
 func GetCartItems(id uint) (*models.Carts, error) {
 	var cart models.Carts
-	result := config.DB.Preload("Items").
+	result := config.DB.
+		Preload("Items", func(db *gorm.DB) *gorm.DB {
+			return db.Order("id ASC")
+		}).
 		Where("user_id  = ? AND status = ?", id, "active").
 		First(&cart)
 	if result.Error != nil{
@@ -27,7 +32,7 @@ func GetCartItems(id uint) (*models.Carts, error) {
 	return  &cart, nil
 }
 
-func GetCart(id uint) *models.Carts {
+func CheckCart(id uint) *models.Carts {
 	var cart models.Carts
 	result := config.DB.
 		Where("user_id = ? AND status = ?", id, "active").
@@ -42,4 +47,34 @@ func GetCart(id uint) *models.Carts {
 
 func CreateCart(cart *models.Carts) error {
 	return config.DB.Create(cart).Error
+}
+
+func UpdateItem(itemID uint, newItem *models.Items, cartId uint)  error{
+	result := config.DB.Model(&models.Items{}).
+		Where("id = ? AND cart_id = ?", itemID, cartId).
+		Updates(newItem)
+	if result.Error != nil{
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return errors.New("no rows affected")
+	}
+
+    return  nil
+
+}
+
+func DeleteItem(itemID uint, cartID uint)  error{
+	result := config.DB.
+		Where("id = ? AND cart_id = ?", itemID, cartID).
+		Delete(&models.Items{})
+	if result.Error != nil{
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return errors.New("no rows affected")
+	}
+
+    return  nil
+
 }

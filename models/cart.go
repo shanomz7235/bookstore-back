@@ -12,7 +12,7 @@ type Carts struct {
 type Items struct {
 	gorm.Model
 	CartID  uint    `json:"cart_id"`
-	BookID   uint    `json:"bookid"`
+	BookID   uint    `json:"book_id"`
 	Quantity uint    `json:"quantity"`
 	Price    float64 `json:"price"`
 }
@@ -26,8 +26,7 @@ type CartResponse struct {
 
 type ItemResponse struct {
 	ID       uint    `json:"id"`
-	CartID   uint    `json:"cart_id"`
-	BookID   uint    `json:"bookid"`
+	BookID   uint    `json:"book_id"`
 	Quantity uint    `json:"quantity"`
 	Price    float64 `json:"price"`
 }

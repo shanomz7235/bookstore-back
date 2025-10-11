@@ -12,7 +12,7 @@ import (
 
 func AddToCart(items []models.Items, id uint) error {
 
-	cart := repositories.GetCart(id)
+	cart := repositories.CheckCart(id)
 	if cart == nil {
 		cart = &models.Carts{UserID: id, Status: "active"}
 		err := repositories.CreateCart(cart)
@@ -45,28 +45,58 @@ func AddToCart(items []models.Items, id uint) error {
 func GetCartItems(id uint) (*models.CartResponse, error) {
 
 	cart, err := repositories.GetCartItems(id)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 
 	var items []models.ItemResponse
-	for _, item := range cart.Items{
+	for _, item := range cart.Items {
 		items = append(items, models.ItemResponse{
-			ID: item.ID,
-			CartID: item.CartID,
-			BookID: item.BookID,
+			ID:       item.ID,
+			BookID:   item.BookID,
 			Quantity: item.Quantity,
-			Price: item.Price,
+			Price:    item.Price,
 		})
 	}
 
 	cartRes := &models.CartResponse{
-		ID: cart.ID,
+		ID:     cart.ID,
 		UserID: cart.UserID,
 		Status: cart.Status,
-		Items: items,
+		Items:  items,
 	}
 	return cartRes, nil
 }
 
+func UpdateItem(uid uint, itemID uint, newItem *models.Items) error {
 
+	cart := repositories.CheckCart(uid)
+	if cart == nil {
+		return errors.New("user's cart not found")
+	}
+
+	if newItem.Quantity < 1 {
+		if err := repositories.DeleteItem(itemID, cart.ID); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if err := repositories.UpdateItem(itemID, newItem, cart.ID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func DeleteItem(uid uint, itemID uint) error {
+	cart := repositories.CheckCart(uid)
+	if cart == nil {
+		return errors.New("user's cart not found")
+	}
+	if err := repositories.DeleteItem(itemID, cart.ID); err != nil {
+		return err
+	}
+
+	return nil
+}
