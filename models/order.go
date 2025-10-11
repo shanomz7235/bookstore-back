@@ -1,8 +1,10 @@
 package models
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	// "github.com/shanomz7235/bookstore-back/models"
+	"gorm.io/gorm"
 )
 
 type OrderItem struct {
@@ -15,21 +17,23 @@ type OrderItem struct {
 
 type Order struct {
 	gorm.Model
-	UserID uint
+	UserID uint        `gorm:"foreignKey:UserID"`
+	User   User        `gorm:"foreignKey:UserID"`
 	Items  []OrderItem `gorm:"foreignKey:OrderID" json:"items"`
 	Total  float64     `json:"total"`
-	Status string      `json:"status"` // pending, paid, shipped, canceled
+	Status string      `json:"status"` //  paid, shipping, shipped
 }
 
-
 type OrderResponse struct {
-	ID     uint              `json:"id"`
-	UserID uint              `json:"user_id"`
-	Total  float64           `json:"total"`
-	Status string            `json:"status"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	Items  []OrderItemResponse `json:"items"`
+	ID          uint                `json:"id"`
+	UserID      uint                `json:"user_id"`
+	UserName    string              `json:"user_name"`
+	UserAddress string              `json:"user_address"`
+	Total       float64             `json:"total"`
+	Status      string              `json:"status"`
+	CreatedAt   time.Time           `json:"created_at"`
+	UpdatedAt   time.Time           `json:"updated_at"`
+	Items       []OrderItemResponse `json:"items"`
 }
 
 type OrderItemResponse struct {
@@ -37,4 +41,3 @@ type OrderItemResponse struct {
 	Quantity uint    `json:"quantity"`
 	Price    float64 `json:"price"`
 }
-

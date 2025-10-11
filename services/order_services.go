@@ -107,6 +107,8 @@ func convertOrdersToResponse(orders []models.Order) ([]models.OrderResponse, err
 		responses = append(responses, models.OrderResponse{
 			ID:     order.ID,
 			UserID: order.UserID,
+			UserName: order.User.Name,
+			UserAddress: order.User.Address,
 			Items:  items,
 			Total:  order.Total,
 			Status: order.Status,

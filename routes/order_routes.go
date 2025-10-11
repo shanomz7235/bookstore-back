@@ -12,9 +12,12 @@ func SetupOrderRoutes(app *fiber.App) {
 
 	order.Use(middleware.AuthRequired)
 
-	order.Post("/purchase", handlers.Purchase)
-	order.Get("/", handlers.GetOrderUser)
-	admin := order.Group("/", middleware.RoleRequired("admin"))
+	user := order.Group("/user", middleware.RoleRequired("user"))
+	user.Post("/purchase", handlers.Purchase)
+	user.Get("/", handlers.GetOrderUser)
+
+
+	admin := order.Group("/admin", middleware.RoleRequired("admin"))
 	admin.Put("/:id", handlers.UpdateOrderStatus)
 	admin.Get("/listOrder", handlers.GetAllOrders)
 }

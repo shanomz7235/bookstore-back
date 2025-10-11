@@ -12,7 +12,7 @@ import (
 
 func CreateOrder(order *models.Order) error {
 	result := config.DB.Create(order)
-	if result.Error != nil{
+	if result.Error != nil {
 		return result.Error
 	}
 	return nil
@@ -28,10 +28,11 @@ func GetOrders(userID uint) ([]models.Order, error) {
 		Order("id ASC").
 		Find(&orders)
 
-		if result.Error != nil{
-			return nil, result.Error
-		}
-		return orders, nil
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return orders, nil
 }
 
 func GetOrderByID(orderID uint) (*models.Order, error) {
@@ -58,18 +59,18 @@ func UpdateOrderStatus(order *models.Order) error {
 	return nil
 }
 
-
 func GetAllOrders() ([]models.Order, error) {
 	var orders []models.Order
 	result := config.DB.
 		Preload("Items", func(db *gorm.DB) *gorm.DB {
 			return db.Order("id ASC")
 		}).
+		Preload("User").
 		Order("id ASC").
 		Find(&orders)
 
-		if result.Error != nil{
-			return nil, result.Error
-		}
-		return orders, nil
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return orders, nil
 }
