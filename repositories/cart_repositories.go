@@ -78,3 +78,17 @@ func DeleteItem(itemID uint, cartID uint)  error{
     return  nil
 
 }
+
+func UpdateCartStatus(cart *models.Carts) error {
+	result := config.DB.Model(&cart).Updates(cart)
+
+    if result.Error != nil {
+        return result.Error
+    }
+
+    if result.RowsAffected == 0 {
+        return errors.New("no rows affected")
+    }
+
+    return nil
+}

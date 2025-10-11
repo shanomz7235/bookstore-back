@@ -74,3 +74,15 @@ func DeleteBook(id uint, book *models.Book) error {
 	}
 	return nil
 }
+
+func UpdateBookStock(book *models.Book) error {
+	result := config.DB.Model(&models.Book{}).Where("id = ?", book.ID).Updates(book)
+    if result.Error != nil {
+        return result.Error
+    }
+    if result.RowsAffected == 0 {
+        return errors.New("no rows affected")
+    }
+    return nil
+}
+

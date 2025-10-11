@@ -10,9 +10,11 @@ func SetupUserRoutes(app *fiber.App) {
 
 	user := app.Group("/user")
 
-	user.Use(middleware.AuthRequired)
 	user.Post("/register", handlers.Register)
 	user.Post("/login", handlers.LoginUser)
+
+	user.Use(middleware.AuthRequired)
+	
 
 	admin := user.Group("/", middleware.RoleRequired("admin"))
 	admin.Get("/:id", handlers.GetUser)

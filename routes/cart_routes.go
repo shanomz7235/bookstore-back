@@ -12,9 +12,11 @@ func SetupCartRoutes(app *fiber.App) {
 
 	cart.Use(middleware.AuthRequired)
 
-	cart.Post("/", handlers.AddToCart)
-	cart.Get("/", handlers.GetCartItems)
-	cart.Put("/:id", handlers.UpdateItems)
-	cart.Delete("/:id", handlers.DeleteItem)
+	user := cart.Group("/", middleware.RoleRequired("user"))
+
+	user.Post("/", handlers.AddToCart)
+	user.Get("/", handlers.GetCartItems)
+	user.Put("/:id", handlers.UpdateItems)
+	user.Delete("/:id", handlers.DeleteItem)
 
 }
