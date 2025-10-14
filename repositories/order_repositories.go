@@ -24,6 +24,8 @@ func GetOrders(userID uint) ([]models.Order, error) {
 		Preload("Items", func(db *gorm.DB) *gorm.DB {
 			return db.Order("id ASC")
 		}).
+		Preload("User").
+		Order("id ASC").
 		Where("user_id = ?", userID).
 		Order("id ASC").
 		Find(&orders)
